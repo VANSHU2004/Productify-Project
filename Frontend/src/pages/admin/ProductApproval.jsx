@@ -8,9 +8,8 @@ export default function ProductApproval() {
   const [loading, setLoading] = useState(true);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [modalMode, setModalMode] = useState("view"); // view | edit
+  const [modalMode, setModalMode] = useState("view");
 
-  /* Fetch Products */
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -26,12 +25,10 @@ export default function ProductApproval() {
     }
   };
 
-  /* Update Status */
   const updateStatus = async (id, status) => {
     try {
       await api.patch(`/products/${id}/status`, { status });
 
-      // Optimistic UI update
       setProducts((prev) =>
         prev.map((p) =>
           p._id === id ? { ...p, status } : p
@@ -39,15 +36,17 @@ export default function ProductApproval() {
       );
 
       setSelectedProduct(null);
-    } catch (err) {
+    } catch {
       alert("Failed to update product status");
     }
   };
 
-  /* Save Edit */
   const saveProduct = async (values) => {
     try {
-      const res = await api.put(`/products/${selectedProduct._id}`, values);
+      const res = await api.put(
+        `/products/${selectedProduct._id}`,
+        values
+      );
 
       setProducts((prev) =>
         prev.map((p) =>
@@ -56,11 +55,24 @@ export default function ProductApproval() {
       );
 
       setSelectedProduct(null);
-    } catch (err) {
+    } catch {
       alert("Failed to update product");
     }
   };
 
+  const deleteProduct = async (product) => {
+    if (!window.confirm("Delete this product permanently?")) return;
+
+    try {
+      await api.delete(`/products/${product._id}`);
+      setProducts((prev) =>
+        prev.filter((p) => p._id !== product._id)
+      );
+      setSelectedProduct(null);
+    } catch {
+      alert("Failed to delete product");
+    }
+  };
 
   if (loading) {
     return <p className="text-gray-500">Loading products...</p>;
@@ -68,27 +80,28 @@ export default function ProductApproval() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Product Approvals</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        Product Approvals
+      </h2>
 
-      {/* Product Grid */}
       <ProductGrid
         products={products}
-        onView={(product) => {
-          setSelectedProduct(product);
+        onView={(p) => {
+          setSelectedProduct(p);
           setModalMode("view");
         }}
-        onEdit={(product) => {
-          setSelectedProduct(product);
+        onEdit={(p) => {
+          setSelectedProduct(p);
           setModalMode("edit");
         }}
+        onDelete={deleteProduct}
       />
 
-      {/* View/Edit Modal*/}
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}
           readOnly={modalMode === "view"}
-          showStatusActions={true}
+          showStatusActions={modalMode === "edit"}
           onApprove={() =>
             updateStatus(selectedProduct._id, "approved")
           }

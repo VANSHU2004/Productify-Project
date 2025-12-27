@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { UserModel } from "../models/user.model.js";
 
-// ================= LOGIN =================
+// LOGIN 
 export async function login(email, password) {
   const user = await UserModel.findOne({ email }).select("+password");
   if (!user) throw new Error("Invalid credentials");
@@ -33,7 +33,7 @@ export async function signup(data) {
   return generateToken(user);
 }
 
-// ================= OAUTH LOGIN =================
+// OAUTH LOGIN
 export async function oauthLogin({ provider, email, name, role }) {
   let user = await UserModel.findOne({ email });
 
@@ -50,7 +50,7 @@ export async function oauthLogin({ provider, email, name, role }) {
 }
 
 
-// ================= TOKEN + SAFE USER =================
+// TOKEN + SAFE USER
 function generateToken(user) {
   const token = jwt.sign(
     {
@@ -64,7 +64,7 @@ function generateToken(user) {
     { expiresIn: "7d" }
   );
 
-  // 🔐 REMOVE SENSITIVE FIELDS
+  // REMOVE SENSITIVE FIELDS
   const safeUser = {
     id: user._id,
     name: user.name,

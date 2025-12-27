@@ -1,5 +1,6 @@
 import { UserModel } from "../models/user.model.js";
 
+// Get vendors with all the required data
 export async function getVendorsWithProductStats() {
   const vendors = await UserModel.aggregate([
     { $match: { role: "vendor" } },

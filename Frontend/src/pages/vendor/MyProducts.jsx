@@ -42,6 +42,23 @@ export default function MyProducts() {
     }
   };
 
+  const deleteProduct = async (product) => {
+    if (!window.confirm("Delete this product permanently?")) return;
+
+    try {
+      await api.delete(`/products/${product._id}`);
+
+      setProducts((prev) =>
+        prev.filter((p) => p._id !== product._id)
+      );
+
+      setSelectedProduct(null);
+    } catch {
+      alert("Failed to delete product");
+    }
+  };
+
+
   if (loading) {
     return <p className="text-gray-500">Loading products...</p>;
   }
@@ -60,6 +77,7 @@ export default function MyProducts() {
           setSelectedProduct(product);
           setMode("edit");
         }}
+        onDelete = {deleteProduct}
       />
 
       {selectedProduct && (

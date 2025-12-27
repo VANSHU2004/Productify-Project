@@ -4,6 +4,7 @@ export default function ProductCard({
   product,
   onView,
   onEdit,
+  onDelete,
   hideStatus = false,
 }) {
   const statusColor = {
@@ -15,9 +16,13 @@ export default function ProductCard({
   return (
     <div className="relative bg-white border rounded-lg p-4 flex flex-col hover:shadow-md transition">
       {/* Actions */}
-      {(onView || onEdit) && (
-        <div className="absolute top-2 right-0">
-          <ProductActionsMenu onView={onView} onEdit={onEdit} />
+      {(onView || onEdit || onDelete) && (
+        <div className="absolute top-2 right-2">
+          <ProductActionsMenu
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         </div>
       )}
 

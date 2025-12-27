@@ -1,28 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Trash2 } from "lucide-react";
 
-export default function ProductActionsMenu({ onView, onEdit }) {
+export default function ProductActionsMenu({
+  onView,
+  onEdit,
+  onDelete,
+}) {
   const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
+  const ref = useRef();
 
+  // Close on outside click
   useEffect(() => {
-    if (!open) return;
-
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
         setOpen(false);
       }
     };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
-
-  if (!onView && !onEdit) return null;
+  if (!onView && !onEdit && !onDelete) return null;
 
   return (
-    <div ref={menuRef} className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((p) => !p)}
         className="p-1 rounded hover:bg-gray-100"
@@ -31,7 +32,7 @@ export default function ProductActionsMenu({ onView, onEdit }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-20">
+        <div className="absolute right-0 mt-2 w-36 bg-white border rounded shadow z-20">
           {onView && (
             <button
               onClick={() => {
@@ -53,6 +54,18 @@ export default function ProductActionsMenu({ onView, onEdit }) {
               className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
             >
               Edit
+            </button>
+          )}
+
+          {onDelete && (
+            <button
+              onClick={() => {
+                onDelete();
+                setOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+            >
+              <Trash2 size={14} /> Delete
             </button>
           )}
         </div>

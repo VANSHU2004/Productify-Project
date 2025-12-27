@@ -8,6 +8,7 @@ export default function ProductGrid({
   onEdit,
   hideStatus = false,
   disableStatusFilter = false,
+  onDelete
 }) {
   const [status, setStatus] = useState("all");
   const [search, setSearch] = useState("");
@@ -17,8 +18,8 @@ export default function ProductGrid({
       const statusMatch = disableStatusFilter
         ? true
         : status === "all"
-        ? true
-        : p.status === status;
+          ? true
+          : p.status === status;
 
       const q = search.toLowerCase();
 
@@ -49,10 +50,10 @@ export default function ProductGrid({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <ProductCard
-              key={product._id}
               product={product}
-              onView={onView ? () => onView(product) : undefined}
+              onView={() => onView?.(product)}
               onEdit={onEdit ? () => onEdit(product) : undefined}
+              onDelete={onDelete ? () => onDelete(product) : undefined}
               hideStatus={hideStatus}
             />
           ))}
