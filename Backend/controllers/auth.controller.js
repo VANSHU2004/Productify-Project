@@ -89,7 +89,7 @@ export async function oauthController(req, res) {
         provider: "google",
         email,
         name,
-        role, // only used if user is new
+        role,
       });
 
     return res.status(200).json({

@@ -13,9 +13,11 @@ import AddProduct from "./components/products/AddProduct";
 import ProductApproval from "./pages/admin/ProductApproval";
 import Products from "./pages/user/Products";
 import Vendors from "./pages/admin/Vendors";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
+    <>
     <BrowserRouter>
       <Routes>
         {/* Public Routes*/}
@@ -50,7 +52,7 @@ export default function App() {
 
             <ProtectedRoute requiredRole="admin">
               <AppLayout>
-              <Vendors />
+                <Vendors />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -110,6 +112,16 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      
     </BrowserRouter>
+
+    <Toaster position="top-right" 
+      toastOptions={{
+        duration: 3000,
+      }} 
+      reverseOrder={false} 
+      />
+    </>
+    
   );
 }
