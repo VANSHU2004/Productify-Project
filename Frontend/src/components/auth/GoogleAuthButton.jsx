@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { navigateToRoleDashboard } from "../../utils/navigation";
 
-export default function GoogleAuthButton() {
+export default function GoogleAuthButton({ role }) {
   const navigate = useNavigate();
-  const { login, selectedRole } = useAuth();
+  const { login } = useAuth();
 
   const handleSuccess = async ({ credential }) => {
     try {
@@ -19,14 +19,12 @@ export default function GoogleAuthButton() {
       const payload = {
         token: credential,
       };
-
-      // ONLY for first-time signup
-      if (selectedRole) {
-        payload.role = selectedRole;
+      
+      if (role) {
+        payload.role = role;
       }
 
       const res = await axiosInstance.post("/auth/oauth/google", payload);
-
       const userData = res.data.data;
 
       login(userData);

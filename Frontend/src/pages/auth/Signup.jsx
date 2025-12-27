@@ -162,7 +162,7 @@ const Signup = () => {
         </div>
 
         {/* Google OAuth */}
-        <GoogleAuthButton />
+        <GoogleAuthButton role={role} />
 
         <p className="text-sm text-center mt-4">
           Already have an account?{" "}
