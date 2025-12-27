@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MoreVertical } from "lucide-react";
 
 export default function ProductActionsMenu({ onView, onEdit }) {
   const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
   if (!onView && !onEdit) return null;
 
   return (
-    <div className="relative">
+    <div ref={menuRef} className="relative">
       <button
         onClick={() => setOpen((p) => !p)}
         className="p-1 rounded hover:bg-gray-100"
@@ -16,7 +31,7 @@ export default function ProductActionsMenu({ onView, onEdit }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10">
+        <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-20">
           {onView && (
             <button
               onClick={() => {

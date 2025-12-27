@@ -2,10 +2,10 @@ export const getDashboardRoute = (role) => {
   const dashboardRoutes = {
     admin: '/admin',
     vendor: '/vendor',
-    user: '/dashboard'
+    user: '/products'
   };
   
-  return dashboardRoutes[role] || '/dashboard';
+  return dashboardRoutes[role] || '/products';
 };
 
 export const navigateToRoleDashboard = (user, navigate) => {
