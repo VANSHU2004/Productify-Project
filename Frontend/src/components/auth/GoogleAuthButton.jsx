@@ -5,36 +5,39 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { navigateToRoleDashboard } from "../../utils/navigation";
 
-const GoogleAuthButton = ({ rememberMe = false }) => {
+export default function GoogleAuthButton() {
   const navigate = useNavigate();
   const { login, selectedRole } = useAuth();
 
-  const handleSuccess = async (credentialResponse) => {
+  const handleSuccess = async ({ credential }) => {
     try {
-      // Include selected role if available
-      const requestData = {
-        provider: "google",
-        token: credentialResponse.credential,
-      };
-      
-      // Add role if one is selected
-      if (selectedRole) {
-        requestData.role = selectedRole;
+      if (!credential) {
+        toast.error("Google token missing");
+        return;
       }
 
-      const res = await axiosInstance.post("/auth/oauth", requestData);
+      const payload = {
+        token: credential,
+      };
+
+      // ONLY for first-time signup
+      if (selectedRole) {
+        payload.role = selectedRole;
+      }
+
+      const res = await axiosInstance.post("/auth/oauth/google", payload);
+
       const userData = res.data.data;
 
-      // Use AuthContext login method
       login(userData);
-
       toast.success("Logged in with Google");
-      
-      // Navigate to role-appropriate dashboard
+
       navigateToRoleDashboard(userData.user, navigate);
     } catch (err) {
-      toast.error("Google login failed");
       console.error(err);
+      toast.error(
+        err.response?.data?.message || "Google login failed"
+      );
     }
   };
 
@@ -43,14 +46,10 @@ const GoogleAuthButton = ({ rememberMe = false }) => {
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={() => toast.error("Google authentication failed")}
-        width="100%"
         theme="outline"
         size="large"
-        text="continue_with"
         shape="rectangular"
       />
     </div>
   );
-};
-
-export default GoogleAuthButton;
+}

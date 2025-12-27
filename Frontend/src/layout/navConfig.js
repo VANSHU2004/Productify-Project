@@ -17,7 +17,6 @@ export const NAV_CONFIG = {
     { to: "/vendor/add-product", label: "Add Product", icon: PlusCircle },
   ],
   user: [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/products", label: "Products", icon: Package },
   ],
 };

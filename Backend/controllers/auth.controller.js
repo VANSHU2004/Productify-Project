@@ -1,4 +1,7 @@
 import * as authService from "../services/auth.service.js";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Normal Login
 export async function loginController(req, res) {
@@ -59,33 +62,45 @@ export async function signupController(req, res) {
 }
 
 // OAuth signup
+
+
 export async function oauthController(req, res) {
   try {
-    const { provider, email, name } = req.body;
+    const { token, role } = req.body;
 
-    if (!provider || !email) {
+    if (!token) {
       return res.status(400).json({
         success: false,
-        message: "OAuth provider and email are required",
+        message: "Google token is required",
       });
     }
 
-    // Using OAuth
-    const { token, user } = await authService.oauthLogin({
-      provider,
-      email,
-      name,
+    // 🔐 Verify token with Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
+
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    const { token: jwtToken, user } =
+      await authService.oauthLogin({
+        provider: "google",
+        email,
+        name,
+        role, // only used if user is new
+      });
 
     return res.status(200).json({
       success: true,
-      data: { token, user },
+      data: { token: jwtToken, user },
     });
   } catch (err) {
     console.error("OAuth error:", err);
-    return res.status(400).json({
+    return res.status(401).json({
       success: false,
-      message: err.message || "OAuth authentication failed",
+      message: "Invalid Google token",
     });
   }
 }

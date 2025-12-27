@@ -5,7 +5,6 @@ import Signup from "./pages/auth/Signup";
 
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import VendorDashboard from "./pages/dashboard/VendorDashboard";
-import UserDashboard from "./pages/dashboard/UserDashboard";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AppLayout from "./layout/AppLayout";
@@ -94,16 +93,6 @@ export default function App() {
 
 
         {/* User Routes*/}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiredRole="user">
-              <AppLayout>
-                <UserDashboard />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/products"

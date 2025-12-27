@@ -4,25 +4,32 @@ import ProductFilters from "./ProductFilters";
 
 export default function ProductGrid({
   products = [],
-  renderActions,
   onView,
   onEdit,
+  hideStatus = false,
+  disableStatusFilter = false,
 }) {
   const [status, setStatus] = useState("all");
   const [search, setSearch] = useState("");
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
-      const statusMatch =
-        status === "all" ? true : p.status === status;
+      const statusMatch = disableStatusFilter
+        ? true
+        : status === "all"
+        ? true
+        : p.status === status;
+
+      const q = search.toLowerCase();
 
       const searchMatch =
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.category?.toLowerCase().includes(search.toLowerCase());
+        p.name.toLowerCase().includes(q) ||
+        p.category?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q);
 
       return statusMatch && searchMatch;
     });
-  }, [products, status, search]);
+  }, [products, status, search, disableStatusFilter]);
 
   return (
     <div>
@@ -31,6 +38,7 @@ export default function ProductGrid({
         onStatusChange={setStatus}
         search={search}
         onSearchChange={setSearch}
+        hideStatusFilter={disableStatusFilter}
       />
 
       {filteredProducts.length === 0 ? (
@@ -43,8 +51,9 @@ export default function ProductGrid({
             <ProductCard
               key={product._id}
               product={product}
-              onView={() => onView?.(product)}
-              onEdit={() => onEdit?.(product)}
+              onView={onView ? () => onView(product) : undefined}
+              onEdit={onEdit ? () => onEdit(product) : undefined}
+              hideStatus={hideStatus}
             />
           ))}
         </div>

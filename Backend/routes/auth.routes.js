@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/login", loginController);
 router.post("/signup", signupController);
-router.post("/oauth", oauthController);
+router.post("/oauth/google", oauthController);
 
 
 export default router;

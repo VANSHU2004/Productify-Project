@@ -4,6 +4,8 @@ import { MoreVertical } from "lucide-react";
 export default function ProductActionsMenu({ onView, onEdit }) {
   const [open, setOpen] = useState(false);
 
+  if (!onView && !onEdit) return null;
+
   return (
     <div className="relative">
       <button
@@ -15,25 +17,29 @@ export default function ProductActionsMenu({ onView, onEdit }) {
 
       {open && (
         <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10">
-          <button
-            onClick={() => {
-              onView();
-              setOpen(false);
-            }}
-            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-          >
-            View
-          </button>
+          {onView && (
+            <button
+              onClick={() => {
+                onView();
+                setOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+            >
+              View
+            </button>
+          )}
 
-          <button
-            onClick={() => {
-              onEdit();
-              setOpen(false);
-            }}
-            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-          >
-            Edit
-          </button>
+          {onEdit && (
+            <button
+              onClick={() => {
+                onEdit();
+                setOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+            >
+              Edit
+            </button>
+          )}
         </div>
       )}
     </div>

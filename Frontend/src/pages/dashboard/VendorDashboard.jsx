@@ -1,90 +1,113 @@
-import { useAuth } from '../../context/AuthContext';
-import { Store, Package, TrendingUp, DollarSign } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Package, Clock, CheckCircle, XCircle, Plus } from "lucide-react";
+import api from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
 
 export default function VendorDashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    const res = await api.get(`/products/vendor/${user.id}`);
+    setProducts(res.data.data);
+  };
+
+  const stats = {
+    total: products.length,
+    pending: products.filter(p => p.status === "pending").length,
+    approved: products.filter(p => p.status === "approved").length,
+    rejected: products.filter(p => p.status === "rejected").length,
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="space-y-8">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Store className="h-8 w-8 text-green-600 mr-3" />
-              <h1 className="text-xl font-semibold text-gray-900">Vendor Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Welcome, {user?.name}</span>
-              <button
-                onClick={logout}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <div>
+        <h2 className="text-2xl font-bold">Welcome, {user.name}</h2>
+        <p className="text-gray-600">Manage your products and approvals</p>
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Vendor Portal</h2>
-          <p className="text-gray-600">Manage your products and track your sales performance</p>
-        </div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <StatCard label="Total Products" value={stats.total} icon={Package} />
+        <StatCard label="Pending" value={stats.pending} icon={Clock} />
+        <StatCard label="Approved" value={stats.approved} icon={CheckCircle} />
+        <StatCard label="Rejected" value={stats.rejected} icon={XCircle} />
+      </div>
 
-        {/* Dashboard Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">Products</h3>
-                <p className="text-sm text-gray-500">Manage inventory</p>
-              </div>
-            </div>
-          </div>
+      {/* Quick Actions */}
+      <div className="flex gap-4">
+        <ActionButton
+          label="Add Product"
+          icon={Plus}
+          onClick={() => navigate("/vendor/add-product")}
+        />
+        <ActionButton
+          label="View Products"
+          onClick={() => navigate("/vendor/products")}
+        />
+      </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">Sales</h3>
-                <p className="text-sm text-gray-500">Track revenue</p>
-              </div>
-            </div>
-          </div>
+      {/* Recent Products */}
+      <div className="bg-white border rounded-lg p-4">
+        <h3 className="font-semibold mb-4">Recent Products</h3>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <TrendingUp className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">Analytics</h3>
-                <p className="text-sm text-gray-500">Performance metrics</p>
-              </div>
-            </div>
+        {products.slice(0, 5).map((p) => (
+          <div
+            key={p._id}
+            className="flex justify-between items-center py-2 border-b last:border-0"
+          >
+            <span>{p.name}</span>
+            <span className={`text-sm capitalize ${statusColor(p.status)}`}>
+              {p.status}
+            </span>
           </div>
+        ))}
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <Store className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">Store</h3>
-                <p className="text-sm text-gray-500">Manage storefront</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Placeholder Content */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Orders</h3>
-          <div className="text-center py-8 text-gray-500">
-            <p>Vendor dashboard functionality will be implemented here</p>
-          </div>
-        </div>
-      </main>
+        {products.length === 0 && (
+          <p className="text-sm text-gray-500">No products yet</p>
+        )}
+      </div>
     </div>
   );
+}
+
+/* ---------- Helpers ---------- */
+
+function StatCard({ label, value, icon: Icon }) {
+  return (
+    <div className="bg-white border rounded-lg p-4">
+      <div className="flex items-center gap-3">
+        <Icon className="text-gray-600" />
+        <div>
+          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-xl font-semibold">{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ActionButton({ label, icon: Icon, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-md"
+    >
+      {Icon && <Icon size={16} />}
+      {label}
+    </button>
+  );
+}
+
+function statusColor(status) {
+  if (status === "approved") return "text-green-600";
+  if (status === "rejected") return "text-red-600";
+  return "text-yellow-600";
 }

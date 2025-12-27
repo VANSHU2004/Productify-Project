@@ -33,13 +33,15 @@ export default function Products() {
 
       <ProductGrid
         products={products}
-        onView={(product) => setSelectedProduct(product)}
+        onView={setSelectedProduct}
+        hideStatus
+        disableStatusFilter
       />
 
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}
-          readOnly={true}
+          readOnly
           showStatusActions={false}
           onClose={() => setSelectedProduct(null)}
         />

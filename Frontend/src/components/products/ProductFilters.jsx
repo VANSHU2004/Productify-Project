@@ -5,26 +5,29 @@ export default function ProductFilters({
   onStatusChange,
   search,
   onSearchChange,
+  hideStatusFilter = false,
 }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       {/* Status Tabs */}
-      <div className="flex gap-2">
-        {STATUS_TABS.map((status) => (
-          <button
-            key={status}
-            onClick={() => onStatusChange(status)}
-            className={`px-4 py-1.5 rounded-full text-sm capitalize border
-              ${
-                activeStatus === status
-                  ? "bg-black text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-100"
-              }`}
-          >
-            {status}
-          </button>
-        ))}
-      </div>
+      {!hideStatusFilter && (
+        <div className="flex gap-2">
+          {STATUS_TABS.map((status) => (
+            <button
+              key={status}
+              onClick={() => onStatusChange(status)}
+              className={`px-4 py-1.5 rounded-full text-sm capitalize border
+                ${
+                  activeStatus === status
+                    ? "bg-black text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-100"
+                }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Search */}
       <input

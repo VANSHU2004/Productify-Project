@@ -9,10 +9,16 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import GoogleAuthButton from "../../components/auth/GoogleAuthButton";
-import  {ROLES} from "../../utils/constants";
+import { ROLES } from "../../utils/constants";
 
 
 const Login = () => {
+
+  const ROLE_DASHBOARD_MAP = {
+    admin: "/admin",
+    vendor: "/vendor",
+    user: "/products",
+  };
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -48,7 +54,7 @@ const Login = () => {
       });
 
       login(res.data.data);
-      navigate(`/${selectedRole}`);
+      navigate(ROLE_DASHBOARD_MAP[selectedRole], { replace: true });
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed, try again"
@@ -60,9 +66,9 @@ const Login = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
-     
-      <section className="flex flex-col justify-center items-center w-full max-w-lg rounded shadow-lg shadow-black/30">
-        <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-sm">
+
+      <section className="flex flex-col justify-center items-center w-full max-w-md rounded shadow-lg shadow-black/30">
+        <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-sm">
           <h1 className="text-2xl font-bold w-full text-center mb-5">SIGN IN</h1>
 
           {/* ROLE SELECTOR */}

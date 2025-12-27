@@ -17,7 +17,7 @@ export async function login(email, password) {
   return generateToken(user);
 }
 
-// ================= SIGNUP =================
+// SignUp
 export async function signup(data) {
   const existing = await UserModel.findOne({ email: data.email });
   if (existing) throw new Error("User already exists");
@@ -34,20 +34,21 @@ export async function signup(data) {
 }
 
 // ================= OAUTH LOGIN =================
-export async function oauthLogin({ provider, email, name }) {
+export async function oauthLogin({ provider, email, name, role }) {
   let user = await UserModel.findOne({ email });
 
   if (!user) {
     user = await UserModel.create({
       name: name || email.split("@")[0],
       email,
-      role: "user",
+      role: role || "user",
       oAuthProvider: provider,
     });
   }
 
   return generateToken(user);
 }
+
 
 // ================= TOKEN + SAFE USER =================
 function generateToken(user) {
