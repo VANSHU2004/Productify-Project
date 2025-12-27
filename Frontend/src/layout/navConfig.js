@@ -9,7 +9,8 @@ export const NAV_CONFIG = {
   admin: [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { to: "/admin/products", label: "All Products", icon: Package },
-    { to: "/admin/users", label: "Users", icon: Users },
+    { to: "/admin/vendors", label: "Vendors", icon: Users },
+    { to: "/admin/add-product", label: "Add Product", icon: PlusCircle },
   ],
   vendor: [
     { to: "/vendor", label: "Dashboard", icon: LayoutDashboard },

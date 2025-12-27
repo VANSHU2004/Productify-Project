@@ -13,6 +13,7 @@ import MyProducts from "./pages/vendor/MyProducts";
 import AddProduct from "./pages/vendor/AddProduct";
 import ProductApproval from "./pages/admin/ProductApproval";
 import Products from "./pages/user/Products";
+import Vendors from "./pages/admin/Vendors";
 
 export default function App() {
   return (
@@ -43,6 +44,29 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/add-product"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AppLayout>
+                <AddProduct />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/vendors"
+          element={
+
+            <ProtectedRoute requiredRole="admin">
+              <AppLayout>
+              <Vendors />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
 
 
         {/* Vendor Routes*/}

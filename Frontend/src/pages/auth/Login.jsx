@@ -61,8 +61,8 @@ const Login = () => {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
      
-      <section className="flex flex-col justify-center items-center w-full max-w-lg px-6 rounded shadow-lg shadow-black/30">
-        <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-sm">
+      <section className="flex flex-col justify-center items-center w-full max-w-lg rounded shadow-lg shadow-black/30">
+        <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-sm">
           <h1 className="text-2xl font-bold w-full text-center mb-5">SIGN IN</h1>
 
           {/* ROLE SELECTOR */}
