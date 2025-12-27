@@ -10,7 +10,7 @@ import UserDashboard from "./pages/dashboard/UserDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AppLayout from "./layout/AppLayout";
 import MyProducts from "./pages/vendor/MyProducts";
-import AddProduct from "./pages/vendor/AddProduct";
+import AddProduct from "./components/products/AddProduct";
 import ProductApproval from "./pages/admin/ProductApproval";
 import Products from "./pages/user/Products";
 import Vendors from "./pages/admin/Vendors";
@@ -40,16 +40,6 @@ export default function App() {
             <ProtectedRoute requiredRole="admin">
               <AppLayout>
                 <ProductApproval />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/add-product"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AppLayout>
-                <AddProduct />
               </AppLayout>
             </ProtectedRoute>
           }

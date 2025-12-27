@@ -5,6 +5,7 @@ import { connectDB } from "./db/mongoose.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import adminRoutes from "./routes/admin.routes.js"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cors({ origin: "*", credentials: true }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/admin", adminRoutes)
 
 
 // DB Connection

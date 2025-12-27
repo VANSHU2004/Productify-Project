@@ -12,7 +12,7 @@ export default function Vendors() {
   const fetchVendors = async () => {
     try {
       const res = await api.get("/admin/vendors");
-      console.log(res)
+    //   console.log(res)
       setVendors(res.data.data);
     } catch (err) {
       console.error("Failed to fetch vendors", err);

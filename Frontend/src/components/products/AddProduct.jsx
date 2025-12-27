@@ -42,6 +42,7 @@ export default function AddProduct() {
     try {
       await api.post("/products", values);
       resetForm();
+      
       navigate("/vendor/products");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to add product");
