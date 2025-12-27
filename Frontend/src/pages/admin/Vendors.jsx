@@ -41,7 +41,7 @@ export default function Vendors() {
 
   return (
     <div className="space-y-6">
-      {/* ================= STATS ================= */}
+      {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Vendors" value={stats.totalVendors} />
         <StatCard label="Total Products" value={stats.totalProducts} />
@@ -49,7 +49,7 @@ export default function Vendors() {
         <StatCard label="Rejected Products" value={stats.rejected} />
       </div>
 
-      {/* ================= TABLE ================= */}
+      {/*  TABLE */}
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
